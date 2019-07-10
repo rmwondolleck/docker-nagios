@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nagios-deployment
+  labels:
+    app: nagios
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nagios
+  template:
+    metadata:
+      labels:
+        app: nagios
+    spec:
+      containers:
+        - name: nagios
+          image: rmwondolleck/nagios:latest
+          ports:
+            - containerPort: 80
+

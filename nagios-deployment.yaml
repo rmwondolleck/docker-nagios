@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nagios-deployment
+spec:
+  selector:
+    matchLabels:
+      run: nagios-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: nagios-deployment
+    spec:
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: nagiossecret
+      containers:
+        - name: nagios
+          image: rmwondolleck/nagios:latest
+          ports:
+            - containerPort: 443
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /opt/nagios/ssl
+              name: secret-volume

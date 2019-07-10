@@ -36,11 +36,15 @@ RUN sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg && 
   sed -i 's,/usr/usr,/usr,' /opt/nagios/etc/objects/commands.cfg
 RUN cp /etc/services /var/spool/postfix/etc/
 
-RUN mkdir -p /etc/sv/nagios && mkdir -p /etc/sv/apache && rm -rf /etc/sv/getty-5 && mkdir -p /etc/sv/postfix
+RUN mkdir -p /etc/sv/nagios && mkdir -p /etc/sv/apache && rm -rf /etc/sv/getty-5 && mkdir -p /etc/sv/postfix && mkdir -p /var/spool/nagios/checkresults && mkdir -p /var/spool/nagios/cmd && mkdir -p /var/log/nagios
+RUN chmod -R 777 /var/spool/nagios && chmod -R 777 /var/log/nagios
+
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
 ADD postfix.init /etc/sv/postfix/run
 ADD postfix.stop /etc/sv/postfix/finish
+ADD nagios.cfg /opt/nagios/etc/nagios.cfg
+ADD hosts.tar.gz /opt/nagios/etc/objects/
 
 ADD start.sh /usr/local/bin/start_nagios
 
@@ -56,3 +60,4 @@ VOLUME /var/log/apache2
 VOLUME /usr/share/snmp/mibs
 
 CMD ["/usr/local/bin/start_nagios"]
+#CMD ["/bin/bash"]
